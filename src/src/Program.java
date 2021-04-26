@@ -139,7 +139,10 @@ public class Program {
         //BFS Search
 //        BFSSearch(startPos, finish_positions, grid, rows, columns);
         //A star search
-        AStar.astar(grid, rows, columns, startPos, finish_positions);
+//        AStar.astar(grid, rows, columns, startPos, finish_positions);
+        //DFS Search
+        DFS dfsAlgo = new DFS(grid, rows, columns, startPos, finish_positions);
+        dfsAlgo.DFSSearch();
     }
 
     //finds if the given cell is wall or empty space
@@ -199,7 +202,7 @@ public class Program {
             visited1.replace(currentNode.getId(), Boolean.TRUE);
 
             //find all neighbours of visitedNode and add them in queue
-            List<Cell> neighbours = findNeighbours(grid, currentNode, rows, columns, visited1, queue);
+            List<Cell> neighbours = findNeighbours(grid, currentNode, rows, columns);
             if (!neighbours.isEmpty()) {
                 for (Cell cell : neighbours) {
                     if (!visited1.get(cell.getId()) && cellNotInQueue(queue, cell)) {
@@ -270,7 +273,7 @@ public class Program {
         return result;
     }
 
-    static List<Cell> findNeighbours(Cell[][] grid, Cell currentNode, int rows, int columns, Hashtable<Integer, Boolean> visitedNodes, Queue<Cell> queue) {
+    static List<Cell> findNeighbours(Cell[][] grid, Cell currentNode, int rows, int columns) {
         List<Cell> neighbours = new ArrayList<Cell>();
 
         int currentX = currentNode.getX();

@@ -7,9 +7,7 @@ package src;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Queue;
 import static src.Program.setDirection;
 
 /**
@@ -32,7 +30,7 @@ public class AStar {
         initializeGrid(grid, rows, columns);
         //creating a start node using the given start coordinates
         Cell startNode = grid[startPos.getY()][startPos.getX()];
-        Cell endNode = grid[endPos.get(1).getY()][endPos.get(1).getX()];
+        Cell endNode = grid[endPos.get(0).getY()][endPos.get(0).getX()];
 
         //set of nodes to be evaluated
         List<Cell> open = new ArrayList<Cell>();
@@ -128,6 +126,7 @@ public class AStar {
     //manhattan distance
     public static int getDistance(Cell c1, Cell c2) {
         return (Math.abs(c2.getX() - c1.getX()) + Math.abs(c2.getY() - c1.getY()));
+//        return (int) Math.sqrt(Math.pow(c2.getX() - c1.getX(), 2) + Math.pow(c2.getY() - c1.getY(), 2));
     }
 
     /**
@@ -161,12 +160,6 @@ public class AStar {
         int currentY = currentNode.getY();
         Cell tempCell = new Cell(-1, -1, -1, false);
 
-        if (columns > currentX + 1) {
-            tempCell = grid[currentY][currentX + 1];
-            if (!tempCell.isWall()) {
-                neighbours.add(tempCell);
-            }
-        }
         if (0 <= currentY - 1) {
             tempCell = grid[currentY - 1][currentX];
             if (!tempCell.isWall()) {
@@ -181,6 +174,12 @@ public class AStar {
         }
         if (rows > currentY + 1) {
             tempCell = grid[currentY + 1][currentX];
+            if (!tempCell.isWall()) {
+                neighbours.add(tempCell);
+            }
+        }
+        if (columns > currentX + 1) {
+            tempCell = grid[currentY][currentX + 1];
             if (!tempCell.isWall()) {
                 neighbours.add(tempCell);
             }
