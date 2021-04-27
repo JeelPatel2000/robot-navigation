@@ -40,6 +40,10 @@ public class Program {
 
     public static void main(String[] args) throws Exception {
 
+//        if (args.length != 2) {
+//            System.out.print("Missing Arguements! ex. search <filename> <searchStrategy>");
+//            System.exit(0);
+//        }
         String filename = args[0];
 
         ResourceInitializer ri = new ResourceInitializer();
@@ -47,10 +51,31 @@ public class Program {
 
         ri.getGrid();
 
+//        String strategy = args[1];
+//
+//        switch (strategy.toLowerCase()) {
+//            case "bfs":
+//                BFSSearch(ri.getStartPos(), ri.getEndPos(), ri.getGrid(), ri.getRows(), ri.getColumns());
+//                break;
+//            case "dfs":
+//                DFS dfs = new DFS(ri.getGrid(), ri.getRows(), ri.getColumns(), ri.getStartPos(), ri.getEndPos());
+//                dfs.DFSSearch();
+//                break;
+//            case "astar":
+//                astar(ri.getGrid(), ri.getRows(), ri.getColumns(), ri.getStartPos(), ri.getEndPos());
+//                break;
+//            default: {
+//                System.out.print("Wrong strategy entered! Options: (bfs, dfs, astar)");
+//                System.exit(0);
+//            }
+//
+//        }
 //        BFSSearch(ri.getStartPos(), ri.getEndPos(), ri.getGrid(), ri.getRows(), ri.getColumns());
-        astar(ri.getGrid(), ri.getRows(), ri.getColumns(), ri.getStartPos(), ri.getEndPos());
+//        astar(ri.getGrid(), ri.getRows(), ri.getColumns(), ri.getStartPos(), ri.getEndPos());
 //        DFS dfs = new DFS(ri.getGrid(), ri.getRows(), ri.getColumns(), ri.getStartPos(), ri.getEndPos());
 //        dfs.DFSSearch();
+        GBFS.gbfs(ri.getGrid(), ri.getRows(), ri.getColumns(), ri.getStartPos(), ri.getEndPos());
+
     }
 }
 //----------------------------//
