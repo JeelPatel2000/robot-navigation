@@ -137,12 +137,14 @@ public class Program {
         printGrid(rows, columns, grid);
 
         //BFS Search
-//        BFSSearch(startPos, finish_positions, grid, rows, columns);
+        BFSSearch(startPos, finish_positions, grid, rows, columns);
         //A star search
 //        AStar.astar(grid, rows, columns, startPos, finish_positions);
         //DFS Search
-        DFS dfsAlgo = new DFS(grid, rows, columns, startPos, finish_positions);
-        dfsAlgo.DFSSearch();
+//        DFS dfsAlgo = new DFS(grid, rows, columns, startPos, finish_positions);
+//        dfsAlgo.DFSSearch();
+//        Visualizer v = new Visualizer();
+
     }
 
     //finds if the given cell is wall or empty space
@@ -171,13 +173,24 @@ public class Program {
         }
     }
 
-    static void BFSSearch(Point startPos, List<Point> endPos, Cell[][] grid, int rows, int columns) {
+    static void BFSSearch(Point startPos, List<Point> endPos, Cell[][] grid, int rows, int columns) throws InterruptedException {
+
+        //Result of the BFS i.e. PATH
+        List<Cell> final_path = new ArrayList<Cell>();
 
         //Queue of nodes and List of visited nodes
         Queue<Cell> queue = new ArrayDeque<Cell>();
         Hashtable<Cell, Cell> trackNodes = new Hashtable<Cell, Cell>();
         Hashtable<Integer, Boolean> visited1 = new Hashtable<Integer, Boolean>();
 
+        //Visualizer
+        Visualizer v = new Visualizer(grid, queue, visited1, startPos, endPos, final_path);
+
+        //Run visualizer in seperate thread
+        Thread t = new Thread(v);
+        t.start();
+
+        Thread.sleep(250);
         //to keep track of visited nodes
         int id = 1;
         //initialize all values with false
@@ -218,6 +231,9 @@ public class Program {
                     break;
                 }
             }
+
+            Thread.sleep(250);
+            //Visualize the current state of the grid
         }
 
         Cell at = destinationCell;
@@ -227,16 +243,16 @@ public class Program {
             path.add(at);
             at = trackNodes.get(at);
         }
-        //reversed path
-        List<Cell> new_path = new ArrayList<Cell>();
+        //reversed path = final_path
+
         //reversing the path using the loop
         for (int i = path.size() - 1; i >= 0; i--) {
-            new_path.add(path.get(i));
+            final_path.add(path.get(i));
         }
         //setting direction of the path
-        new_path = setDirection(new_path);
+        final_path = setDirection(final_path);
         //print out the path
-        for (Cell _point : new_path) {
+        for (Cell _point : final_path) {
             System.out.print(_point.getDirection() + " ");
         }
     }

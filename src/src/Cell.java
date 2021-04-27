@@ -103,6 +103,7 @@ public class Cell extends Point implements Comparable<Cell> {
         this.direction = direction;
     }
 
+    //compares fCost
     @Override
     public int compareTo(Cell o) {
 
