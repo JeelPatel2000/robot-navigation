@@ -8,8 +8,7 @@ package src;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import static src.AStar.findCellInGrid;
-import static src.Program.setDirection;
+import static src.Helper.*;
 
 /**
  *
@@ -40,20 +39,30 @@ public class DFS {
         }
     }
 
-    public void DFSSearch() {
+    public void DFSSearch() throws InterruptedException {
 
+        List<Cell> path = new ArrayList<Cell>();
         Cell startNode = this.grid[this.startPos.getY()][this.startPos.getX()];
         List<Cell> endNodes = new ArrayList<Cell>();
         for (Point p : endPos) {
             endNodes.add(this.grid[p.getY()][p.getX()]);
         }
 
+        //Visualizer
+        Visualizer v = new Visualizer(grid, null, visited, startPos, endPos, path);
+
+        //Run visualizer in seperate thread
+        Thread t = new Thread(v);
+        t.start();
+
         dfs(startNode, endNodes);
 
-        retracePath(this.grid, startNode, endNodes);
+        retracePath(this.grid, startNode, endNodes, path);
     }
 
-    boolean dfs(Cell at, List<Cell> endNodes) {
+    boolean dfs(Cell at, List<Cell> endNodes) throws InterruptedException {
+
+        Thread.sleep(100);
 
         //check if any of the end nodes have been reached
         if (areCoordinatesEqual(at, endNodes)) {
@@ -78,86 +87,6 @@ public class DFS {
         }
 
         return false;
-    }
-
-    static boolean areCoordinatesEqual(Cell c1, List<Cell> cList) {
-        boolean result = false;
-
-        for (Cell c : cList) {
-            if (c1.getX() == c.getX() && c1.getY() == c.getY()) {
-                result = true;
-                break;
-            }
-        }
-        return result;
-    }
-
-    static List<Cell> findNeighbours(Cell[][] grid, Cell currentNode, int rows, int columns) {
-        List<Cell> neighbours = new ArrayList<Cell>();
-
-        int currentX = currentNode.getX();
-        int currentY = currentNode.getY();
-        Cell tempCell = new Cell(-1, -1, -1, false);
-
-        if (columns > currentX + 1) {
-            tempCell = grid[currentY][currentX + 1];
-            if (!tempCell.isWall()) {
-                neighbours.add(tempCell);
-            }
-        }
-        if (0 <= currentY - 1) {
-            tempCell = grid[currentY - 1][currentX];
-            if (!tempCell.isWall()) {
-                neighbours.add(tempCell);
-            }
-        }
-        if (0 <= currentX - 1) {
-            tempCell = grid[currentY][currentX - 1];
-            if (!tempCell.isWall()) {
-                neighbours.add(tempCell);
-            }
-        }
-        if (rows > currentY + 1) {
-            tempCell = grid[currentY + 1][currentX];
-            if (!tempCell.isWall()) {
-                neighbours.add(tempCell);
-            }
-        }
-
-        return neighbours;
-    }
-
-    public static void retracePath(Cell[][] grid, Cell startNode, List<Cell> endNodes) {
-        List<Cell> path = new ArrayList<Cell>();
-
-        for (Cell endNode : endNodes) {
-            if (endNode.getParentNodeId() != 0) {
-                Cell currentNode = endNode;
-                while (true) {
-                    path.add(currentNode);
-                    int id = currentNode.getParentNodeId();
-                    currentNode = findCellInGrid(grid, id);
-                    if (currentNode.getId() == startNode.getId()) {
-                        path.add(startNode);
-                        break;
-                    }
-                }
-            }
-        }
-
-        //reversed path
-        List<Cell> new_path = new ArrayList<Cell>();
-        //revers the path
-        for (int i = path.size() - 1; i >= 0; i--) {
-            new_path.add(path.get(i));
-        }
-        //setting direction of the path
-        new_path = setDirection(new_path);
-        //print out the path
-        for (Cell _point : new_path) {
-            System.out.print(_point.getDirection() + " ");
-        }
-
     }
 
 }

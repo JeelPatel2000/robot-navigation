@@ -7,8 +7,10 @@ package src;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
-import static src.Program.setDirection;
+import static src.Helper.*;
+//import static src.Program.setDirection;
 
 /**
  *
@@ -26,17 +28,45 @@ public class AStar {
         }
     }
 
-    public static void astar(Cell[][] grid, int rows, int columns, Point startPos, List<Point> endPos) {
+    public static void astar(Cell[][] grid, int rows, int columns, Point startPos, List<Point> endPos) throws InterruptedException {
         initializeGrid(grid, rows, columns);
         //creating a start node using the given start coordinates
         Cell startNode = grid[startPos.getY()][startPos.getX()];
-        Cell endNode = grid[endPos.get(0).getY()][endPos.get(0).getX()];
+        List<Cell> endNodes = new ArrayList<Cell>();
+        for (Point p : endPos) {
+            endNodes.add(grid[p.getY()][p.getX()]);
+        }
+        Cell endNode = endNodes.get(0);
+
+        //result path
+        List<Cell> path = new ArrayList<Cell>();
+
+        //Hashtable for storing visited nodes
+        Hashtable<Integer, Boolean> visited = new Hashtable<Integer, Boolean>();
+        int id = 1;
+        //initialize all values with false
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                visited.put(id, Boolean.FALSE);
+                id++;
+            }
+        }
 
         //set of nodes to be evaluated
         List<Cell> open = new ArrayList<Cell>();
         //set of nodes already evaluated
         List<Cell> closed = new ArrayList<Cell>();
 
+        //Visualizer
+        Visualizer v = new Visualizer(grid, null, visited, startPos, endPos, path);
+
+        //Run visualizer in seperate thread
+        Thread t = new Thread(v);
+        t.start();
+
+        Thread.sleep(100);
+
+        //add the start node to the open list
         open.add(startNode);
         Cell current;
 
@@ -48,9 +78,11 @@ public class AStar {
             current = open.remove(0);
             //add the current node to closed list
             closed.add(current);
+            //same as above statement just keeps track of visited nodes using cell id
+            visited.replace(current.getId(), Boolean.TRUE);
 
             //check if current node is the target node, if so break out of loop
-            if (areCoordinatesEqual(current, endNode)) {
+            if (areCoordinatesEqual(current, endNodes)) {
                 break;
             }
             List<Cell> neighbours = findNeighbours(grid, current, rows, columns);
@@ -71,56 +103,13 @@ public class AStar {
                     }
                 }
             }
+
+            //Visualize the current state of the grid
+            Thread.sleep(100);
         }
 
-        retracePath(grid, startNode, endNode);
-    }
+        retracePath(grid, startNode, endNodes, path);
 
-    public static void retracePath(Cell[][] grid, Cell startNode, Cell endNode) {
-        List<Cell> path = new ArrayList<Cell>();
-        boolean success = true;
-        Cell currentNode = endNode;
-
-        while (true) {
-            path.add(currentNode);
-            int id = currentNode.getParentNodeId();
-            currentNode = findCellInGrid(grid, id);
-            if (currentNode.getId() == startNode.getId()) {
-                path.add(startNode);
-                break;
-            }
-
-        }
-
-        if (success) {
-            //reversed path
-            List<Cell> new_path = new ArrayList<Cell>();
-            //reversing the path using the loop
-            for (int i = path.size() - 1; i >= 0; i--) {
-                new_path.add(path.get(i));
-            }
-            //setting direction of the path
-            new_path = setDirection(new_path);
-            //print out the path
-            for (Cell _point : new_path) {
-                System.out.print(_point.getDirection() + " ");
-            }
-        }
-    }
-
-    public static Cell findCellInGrid(Cell[][] grid, int id) {
-        Cell result = null;
-        boolean found = false;
-        for (int i = 0; i < grid.length && !found; i++) {
-            for (int j = 0; j < grid[i].length && !found; j++) {
-                if (grid[i][j].getId() == id) {
-                    result = grid[i][j];
-                    found = true;
-                }
-            }
-        }
-
-        return result;
     }
 
     //manhattan distance
@@ -143,48 +132,4 @@ public class AStar {
         return result;
     }
 
-    public static boolean areCoordinatesEqual(Cell c1, Cell c2) {
-        boolean result = false;
-
-        if (c1.getX() == c2.getX() && c1.getY() == c2.getY()) {
-            result = true;
-        }
-
-        return result;
-    }
-
-    static List<Cell> findNeighbours(Cell[][] grid, Cell currentNode, int rows, int columns) {
-        List<Cell> neighbours = new ArrayList<Cell>();
-
-        int currentX = currentNode.getX();
-        int currentY = currentNode.getY();
-        Cell tempCell = new Cell(-1, -1, -1, false);
-
-        if (0 <= currentY - 1) {
-            tempCell = grid[currentY - 1][currentX];
-            if (!tempCell.isWall()) {
-                neighbours.add(tempCell);
-            }
-        }
-        if (0 <= currentX - 1) {
-            tempCell = grid[currentY][currentX - 1];
-            if (!tempCell.isWall()) {
-                neighbours.add(tempCell);
-            }
-        }
-        if (rows > currentY + 1) {
-            tempCell = grid[currentY + 1][currentX];
-            if (!tempCell.isWall()) {
-                neighbours.add(tempCell);
-            }
-        }
-        if (columns > currentX + 1) {
-            tempCell = grid[currentY][currentX + 1];
-            if (!tempCell.isWall()) {
-                neighbours.add(tempCell);
-            }
-        }
-
-        return neighbours;
-    }
 }

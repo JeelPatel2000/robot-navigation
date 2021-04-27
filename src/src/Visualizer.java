@@ -3,7 +3,6 @@ package src;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Hashtable;
 import java.util.Queue;
@@ -30,7 +29,7 @@ public class Visualizer implements Runnable {
         int columns = grid[0].length;
         int cellSize = 80;
 
-        this.canvas = new MyCanvas();
+        this.canvas = new MyCanvas(columns * cellSize, rows * cellSize);
         canvas.grid = grid;
         canvas.queue = queue;
         canvas.visitedNodes = visitedNodes;
@@ -64,7 +63,7 @@ public class Visualizer implements Runnable {
 
         while (true) {
 
-            if (path.size() != 0) {
+            if (!path.isEmpty()) {
                 canvas.path_found = true;
                 break;
             }
@@ -72,7 +71,7 @@ public class Visualizer implements Runnable {
             canvas.repaint();
 
             try {
-                Thread.sleep(100);
+                Thread.sleep(70);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Visualizer.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -94,12 +93,12 @@ class MyCanvas extends Canvas {
     public List<Cell> path;
     public boolean path_found;
     int cellSize;
-    int WIDTH = 1100;
-    int HEIGHT = 500;
+    int WIDTH;
+    int HEIGHT;
 
-    public MyCanvas() {
+    public MyCanvas(int w, int h) {
         setBackground(Color.WHITE);
-        setSize(WIDTH, HEIGHT);
+        setSize(w, h);
     }
 
     @Override
@@ -153,7 +152,7 @@ class MyCanvas extends Canvas {
             for (Cell c : path) {
                 drawRectangle(g, c.getX() * this.cellSize, c.getY() * this.cellSize, this.cellSize, Color.YELLOW);
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(150);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(MyCanvas.class.getName()).log(Level.SEVERE, null, ex);
                 }

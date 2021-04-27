@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import static src.Program.isWall;
-import static src.Program.printGrid;
 
 /**
  *
@@ -25,6 +23,8 @@ public class ResourceInitializer {
     private Cell[][] grid;
     private Point startPos;
     private List<Point> endPos;
+    private int rows;
+    private int columns;
 
     public Cell[][] getGrid() {
         return grid;
@@ -50,7 +50,23 @@ public class ResourceInitializer {
         this.endPos = endPos;
     }
 
-    public static void Initialize(String filename) throws IOException {
+    public int getRows() {
+        return rows;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
+    public void setColumns(int columns) {
+        this.columns = columns;
+    }
+
+    public void Initialize(String filename) throws IOException {
 
         File file = new File(filename);
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -58,11 +74,12 @@ public class ResourceInitializer {
 
         ///////
         //Rows, Columns
-        int rows = 0, columns = 0;
+        this.rows = 0;
+        this.columns = 0;
         //Start Postion
-        Point startPos;
+//        Point startPos;
         //Finish positions
-        List<Point> finish_positions = new ArrayList<Point>();
+        this.endPos = new ArrayList<Point>();
         //Array for storing wall coordinates
         List<Wall> walls = new ArrayList<Wall>();
         //Grid of Cells
@@ -79,9 +96,9 @@ public class ResourceInitializer {
             if (counter == 0) {
                 matcher = pattern.matcher(st);
                 matcher.find();
-                rows = Integer.parseInt(matcher.group());
+                this.rows = Integer.parseInt(matcher.group());
                 matcher.find();
-                columns = Integer.parseInt(matcher.group());
+                this.columns = Integer.parseInt(matcher.group());
                 System.out.println(String.format("Rows: %d", rows));
                 System.out.println(String.format("Columns: %d", columns));
             }
@@ -92,7 +109,7 @@ public class ResourceInitializer {
                 int start_x = Integer.parseInt(matcher.group());
                 matcher.find();
                 int start_y = Integer.parseInt(matcher.group());
-                startPos = new Point(start_x, start_y);
+                this.startPos = new Point(start_x, start_y);
                 System.out.println(String.format("Starting Postion : %s", startPos.toString()));
             }
             //array of ending positions
@@ -103,11 +120,11 @@ public class ResourceInitializer {
                     int _x = Integer.parseInt(matcher.group());
                     matcher.find();
                     int _y = Integer.parseInt(matcher.group());
-                    finish_positions.add(new Point(_x, _y));
+                    this.endPos.add(new Point(_x, _y));
                 }
 
-                for (int i = 0; i < finish_positions.size(); i++) {
-                    System.out.println(String.format("End position %d : %s", i + 1, finish_positions.get(i).toString()));
+                for (int i = 0; i < endPos.size(); i++) {
+                    System.out.println(String.format("End position %d : %s", i + 1, endPos.get(i).toString()));
                 }
             }
             //Walls
@@ -135,7 +152,7 @@ public class ResourceInitializer {
         }
 
         //empty grid of cells
-        Cell[][] grid = new Cell[rows][columns];
+        this.grid = new Cell[rows][columns];
         int id = 1;
         //creates grid of cells
         for (int i = 0; i < rows; i++) {
@@ -154,8 +171,32 @@ public class ResourceInitializer {
         printGrid(rows, columns, grid);
     }
 
-    public static void main(String[] args) throws IOException {
-        Initialize("C:\\Users\\jeelp\\Documents\\NetBeansProjects\\Assignment1_COS30019\\src\\sample\\RobotNavTest.txt");
+    //Helper functions
+    static boolean isWall(int xPos, int yPos, List<Wall> walls) {
+        boolean result = false;
+
+        for (int i = 0; i < walls.size(); i++) {
+            Wall _wall = walls.get(i);
+
+            if (xPos >= _wall.getX() && yPos >= _wall.getY() && xPos < (_wall.getX() + _wall.getWide()) && yPos < (_wall.getY() + _wall.getHigh())) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    //prints the Grid
+    static void printGrid(int rows, int columns, Cell[][] grid) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                System.out.print(grid[i][j].toString());
+            }
+            System.out.println();
+        }
+//    }
+
     }
 
 }
