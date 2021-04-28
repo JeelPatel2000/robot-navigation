@@ -1,2 +1,0 @@
-src.Visualizer
-src.MyCanvas

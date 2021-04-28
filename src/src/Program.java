@@ -74,8 +74,9 @@ public class Program {
 //        astar(ri.getGrid(), ri.getRows(), ri.getColumns(), ri.getStartPos(), ri.getEndPos());
 //        DFS dfs = new DFS(ri.getGrid(), ri.getRows(), ri.getColumns(), ri.getStartPos(), ri.getEndPos());
 //        dfs.DFSSearch();
-        GBFS.gbfs(ri.getGrid(), ri.getRows(), ri.getColumns(), ri.getStartPos(), ri.getEndPos());
-
+//        GBFS.gbfs(ri.getGrid(), ri.getRows(), ri.getColumns(), ri.getStartPos(), ri.getEndPos());
+        CUS1 cus = new CUS1(ri.getGrid(), ri.getRows(), ri.getColumns(), ri.getStartPos(), ri.getEndPos());
+        cus.cusSearch();
     }
 }
 //----------------------------//

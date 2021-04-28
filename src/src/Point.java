@@ -10,7 +10,8 @@ package src;
  * @author jeelp
  */
 public class Point {
-    private int x,y;
+
+    private int x, y;
 
     public Point(int x, int y) {
         this.x = x;
@@ -37,6 +38,10 @@ public class Point {
     public String toString() {
         return String.format("X: %d, Y: %d", this.getX(), this.getY());
     }
-    
-    
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

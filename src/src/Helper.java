@@ -127,6 +127,10 @@ public class Helper {
         //setting direction of the path
         final_path = setDirection(final_path);
         //print out the path
+
+        if (final_path.isEmpty()) {
+            System.out.print("No path found");
+        }
         for (Cell _point : final_path) {
             System.out.print(_point.getDirection() + " ");
         }

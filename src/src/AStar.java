@@ -21,7 +21,7 @@ public class AStar {
     public static void initializeGrid(Cell[][] grid, int rows, int columns) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                grid[i][j].setfCost(99);
+                grid[i][j].setfCost(0);
                 grid[i][j].setgCost(1);
                 grid[i][j].sethCost(99);
             }
@@ -70,7 +70,7 @@ public class AStar {
         open.add(startNode);
         Cell current;
 
-        while (open.size() != 0) {
+        while (!open.isEmpty()) {
 
             //sorts the array list in ascending order by fCost
             Collections.sort(open);

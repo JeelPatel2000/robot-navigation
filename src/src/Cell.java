@@ -110,4 +110,8 @@ public class Cell extends Point implements Comparable<Cell> {
         return (this.getgCost() + this.gethCost()) - (o.getgCost() + o.gethCost());
     }
 
+    public boolean equals(Cell obj) {
+        return this.getX() == obj.getX() && this.getY() == obj.getY();
+    }
+
 }

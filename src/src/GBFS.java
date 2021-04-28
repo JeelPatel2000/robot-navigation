@@ -24,7 +24,7 @@ public class GBFS {
             for (int j = 0; j < columns; j++) {
                 grid[i][j].setfCost(0);
                 grid[i][j].setgCost(0);
-                grid[i][j].sethCost(99);
+                grid[i][j].sethCost(1);
             }
         }
     }
@@ -88,14 +88,14 @@ public class GBFS {
             }
             List<Cell> neighbours = findNeighbours(grid, current, rows, columns);
             for (Cell cell : neighbours) {
+
+//                cell.sethCost(getDistance(cell, endNode));
                 //check if the cell is in the closed list, if so then continue to the next neighbour
                 if (containsCell(closed, cell)) {
                     continue;
                 }
 
-                int newCostToNeighbour = getDistance(current, cell);
                 if (!containsCell(open, cell)) {
-//                    cell.setgCost(newCostToNeighbour);
                     cell.sethCost(getDistance(cell, endNode));
                     cell.setParentNodeId(current.getId());
 
