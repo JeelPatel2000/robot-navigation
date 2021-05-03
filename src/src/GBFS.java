@@ -1,17 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package src;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
-import static src.Helper.areCoordinatesEqual;
-import static src.Helper.findNeighbours;
-import static src.Helper.retracePath;
+import static src.Helper.*;
 
 /**
  *
@@ -53,13 +46,16 @@ public class GBFS {
             }
         }
 
+        //found flag
+        boolean found = false;
+
         //set of nodes to be evaluated
         List<Cell> open = new ArrayList<Cell>();
         //set of nodes already evaluated
         List<Cell> closed = new ArrayList<Cell>();
 
         //Visualizer
-        Visualizer v = new Visualizer(grid, null, visited, startPos, endPos, path);
+        Visualizer v = new Visualizer(grid, visited, startPos, endPos, path);
 
         //Run visualizer in seperate thread
         Thread t = new Thread(v);
@@ -84,6 +80,7 @@ public class GBFS {
 
             //check if current node is the target node, if so break out of loop
             if (areCoordinatesEqual(current, endNodes)) {
+                found = true;
                 break;
             }
             List<Cell> neighbours = findNeighbours(grid, current, rows, columns);
@@ -109,7 +106,12 @@ public class GBFS {
             Thread.sleep(100);
         }
 
-        retracePath(grid, startNode, endNodes, path);
+        if (!found) {
+            System.out.print("No solution found!");
+        } else {
+            System.out.println(numberOfVisitedNodes(visited));
+            retracePath(grid, startNode, endNodes, path);
+        }
 
     }
 

@@ -76,16 +76,12 @@ public class ResourceInitializer {
         //Rows, Columns
         this.rows = 0;
         this.columns = 0;
-        //Start Postion
-//        Point startPos;
-        //Finish positions
         this.endPos = new ArrayList<Point>();
         //Array for storing wall coordinates
         List<Wall> walls = new ArrayList<Wall>();
         //Grid of Cells
 
         //
-        ///////
         String st;
         String regex = "\\d+";
         Matcher matcher;
@@ -99,8 +95,8 @@ public class ResourceInitializer {
                 this.rows = Integer.parseInt(matcher.group());
                 matcher.find();
                 this.columns = Integer.parseInt(matcher.group());
-                System.out.println(String.format("Rows: %d", rows));
-                System.out.println(String.format("Columns: %d", columns));
+//                System.out.println(String.format("Rows: %d", rows));
+//                System.out.println(String.format("Columns: %d", columns));
             }
             //starting postion of the robot
             if (counter == 1) {
@@ -110,7 +106,6 @@ public class ResourceInitializer {
                 matcher.find();
                 int start_y = Integer.parseInt(matcher.group());
                 this.startPos = new Point(start_x, start_y);
-                System.out.println(String.format("Starting Postion : %s", startPos.toString()));
             }
             //array of ending positions
             if (counter == 2) {
@@ -123,9 +118,6 @@ public class ResourceInitializer {
                     this.endPos.add(new Point(_x, _y));
                 }
 
-                for (int i = 0; i < endPos.size(); i++) {
-                    System.out.println(String.format("End position %d : %s", i + 1, endPos.get(i).toString()));
-                }
             }
             //Walls
             if (counter >= 3) {
@@ -147,10 +139,6 @@ public class ResourceInitializer {
             counter++;
         }
 
-        for (int i = 0; i < walls.size(); i++) {
-            System.out.println(walls.get(i).toString());
-        }
-
         //empty grid of cells
         this.grid = new Cell[rows][columns];
         int id = 1;
@@ -167,8 +155,6 @@ public class ResourceInitializer {
             }
         }
 
-        //prints the Grid
-        printGrid(rows, columns, grid);
     }
 
     //Helper functions
@@ -195,7 +181,6 @@ public class ResourceInitializer {
             }
             System.out.println();
         }
-//    }
 
     }
 

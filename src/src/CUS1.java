@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package src;
 
 import java.util.ArrayList;
@@ -44,7 +39,7 @@ public class CUS1 {
         //result path
         List<Cell> path = new ArrayList<Cell>();
 
-        int agent_life = 100;
+        int agent_life = this.rows * this.columns;
         boolean found = false;
         Random random = new Random();
         Cell startNode = grid[startPos.getY()][startPos.getX()];
@@ -57,7 +52,7 @@ public class CUS1 {
         boolean stuckedInLoop = false;
 
         //Visualizer
-        Visualizer v = new Visualizer(grid, null, visited, startPos, endPos, path);
+        Visualizer v = new Visualizer(grid, visited, startPos, endPos, path);
 
         //Run visualizer in seperate thread
         Thread t = new Thread(v);

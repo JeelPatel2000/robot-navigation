@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package src;
 
 import java.util.ArrayDeque;
@@ -28,8 +23,14 @@ public class BFS {
         Hashtable<Cell, Cell> trackNodes = new Hashtable<Cell, Cell>();
         Hashtable<Integer, Boolean> visited1 = new Hashtable<Integer, Boolean>();
 
+        //destination nodes
+        List<Cell> endNodes = new ArrayList<Cell>();
+        for (Point p : endPos) {
+            endNodes.add(grid[p.getY()][p.getX()]);
+        }
+
         //Visualizer
-        Visualizer v = new Visualizer(grid, queue, visited1, startPos, endPos, final_path);
+        Visualizer v = new Visualizer(grid, visited1, startPos, endPos, final_path);
 
         //Run visualizer in seperate thread
         Thread t = new Thread(v);
@@ -45,6 +46,9 @@ public class BFS {
                 id++;
             }
         }
+
+        //found flag
+        boolean found = false;
 
         //Starting node
         Cell startCell = grid[startPos.getY()][startPos.getX()];
@@ -63,9 +67,11 @@ public class BFS {
             List<Cell> neighbours = findNeighbours(grid, currentNode, rows, columns);
             if (!neighbours.isEmpty()) {
 
-                if (currentNode.getX() == endPos.get(0).getX() && currentNode.getY() == endPos.get(0).getY()) {
+                //if (currentNode.getX() == endPos.get(0).getX() && currentNode.getY() == endPos.get(0).getY()) {
+                if (areCoordinatesEqual(currentNode, endNodes)) {
                     destinationCell = currentNode;
                     System.out.println("destination reached!!!");
+                    found = true;
                     break;
                 }
 
@@ -76,31 +82,34 @@ public class BFS {
                         trackNodes.put(cell, currentNode);
                     }
                 }
-
             }
-
-            Thread.sleep(150);
-            //Visualize the current state of the grid
+            //By the time BFS thread is sleeping, the visualize thread displays current state of the grid
+            Thread.sleep(120);  //sleep the BFS search thread
         }
 
-        Cell at = destinationCell;
-        List<Cell> path = new ArrayList<Cell>();
-        //extract the path using trackingNodes
-        while (at != null) {
-            path.add(at);
-            at = trackNodes.get(at);
-        }
-        //reversed path = final_path
+        if (!found) {
+            System.out.print("No solution found");
+        } else {
+            System.out.println(numberOfVisitedNodes(visited1));
 
-        //reversing the path using the loop
-        for (int i = path.size() - 1; i >= 0; i--) {
-            final_path.add(path.get(i));
-        }
-        //setting direction of the path
-        final_path = setDirection(final_path);
-        //print out the path
-        for (Cell _point : final_path) {
-            System.out.print(_point.getDirection() + " ");
+            Cell at = destinationCell;
+            List<Cell> path = new ArrayList<Cell>();
+            //extract the path using trackingNodes
+            while (at != null) {
+                path.add(at);
+                at = trackNodes.get(at);
+            }
+            //reversed path = final_path
+            //reversing the path using the loop
+            for (int i = path.size() - 1; i >= 0; i--) {
+                final_path.add(path.get(i));
+            }
+            //setting direction of the path
+            final_path = setDirection(final_path);
+            //print out the path
+            for (Cell _point : final_path) {
+                System.out.print(_point.getDirection() + " ");
+            }
         }
     }
 

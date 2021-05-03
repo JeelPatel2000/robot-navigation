@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package src;
 
 import java.util.ArrayList;
@@ -52,13 +47,16 @@ public class AStar {
             }
         }
 
+        //path found flag
+        boolean found = false;
+
         //set of nodes to be evaluated
         List<Cell> open = new ArrayList<Cell>();
         //set of nodes already evaluated
         List<Cell> closed = new ArrayList<Cell>();
 
         //Visualizer
-        Visualizer v = new Visualizer(grid, null, visited, startPos, endPos, path);
+        Visualizer v = new Visualizer(grid, visited, startPos, endPos, path);
 
         //Run visualizer in seperate thread
         Thread t = new Thread(v);
@@ -83,6 +81,7 @@ public class AStar {
 
             //check if current node is the target node, if so break out of loop
             if (areCoordinatesEqual(current, endNodes)) {
+                found = true;
                 break;
             }
             List<Cell> neighbours = findNeighbours(grid, current, rows, columns);
@@ -108,7 +107,12 @@ public class AStar {
             Thread.sleep(100);
         }
 
-        retracePath(grid, startNode, endNodes, path);
+        if (!found) {
+            System.out.print("No solution found!");
+        } else {
+            System.out.println(numberOfVisitedNodes(visited));
+            retracePath(grid, startNode, endNodes, path);
+        }
 
     }
 

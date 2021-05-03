@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package src;
 
 import java.util.ArrayList;
@@ -20,6 +15,7 @@ public class DFS {
     int rows, columns;
     Point startPos;
     List<Point> endPos;
+    boolean found;
 
     Hashtable<Integer, Boolean> visited = new Hashtable<Integer, Boolean>();
 
@@ -29,6 +25,7 @@ public class DFS {
         this.columns = columns;
         this.startPos = startPos;
         this.endPos = endPos;
+        this.found = false;
 
         int id = 1;
         for (int i = 0; i < rows; i++) {
@@ -49,7 +46,7 @@ public class DFS {
         }
 
         //Visualizer
-        Visualizer v = new Visualizer(grid, null, visited, startPos, endPos, path);
+        Visualizer v = new Visualizer(grid, visited, startPos, endPos, path);
 
         //Run visualizer in seperate thread
         Thread t = new Thread(v);
@@ -57,7 +54,12 @@ public class DFS {
 
         dfs(startNode, endNodes);
 
-        retracePath(this.grid, startNode, endNodes, path);
+        if (!found) {
+            System.out.print("No solution found!");
+        } else {
+            System.out.println(numberOfVisitedNodes(visited));
+            retracePath(this.grid, startNode, endNodes, path);
+        }
     }
 
     boolean dfs(Cell at, List<Cell> endNodes) throws InterruptedException {
@@ -66,6 +68,7 @@ public class DFS {
 
         //check if any of the end nodes have been reached
         if (areCoordinatesEqual(at, endNodes)) {
+            this.found = true;
             return true;
         }
         //mark the current node as visited

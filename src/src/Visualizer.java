@@ -11,18 +11,12 @@ import java.util.logging.Logger;
 
 public class Visualizer implements Runnable {
 
-    public Queue<Cell> queue;
-    public Hashtable<Integer, Boolean> visitedNodes;
-    public Cell[][] grid;
     public MyCanvas canvas;
     public Frame f;
     public List<Cell> path;
 
-    public Visualizer(Cell[][] grid, Queue<Cell> open, Hashtable<Integer, Boolean> visitedNodes, Point startNode, List<Point> endNodes, List<Cell> path) throws InterruptedException {
+    public Visualizer(Cell[][] grid, Hashtable<Integer, Boolean> visitedNodes, Point startNode, List<Point> endNodes, List<Cell> path) throws InterruptedException {
 
-        this.queue = open;
-        this.grid = grid;
-        this.visitedNodes = visitedNodes;
         this.path = path;
 
         int rows = grid.length;
@@ -31,7 +25,6 @@ public class Visualizer implements Runnable {
 
         this.canvas = new MyCanvas(columns * cellSize, rows * cellSize);
         canvas.grid = grid;
-        canvas.queue = queue;
         canvas.visitedNodes = visitedNodes;
         canvas.cellSize = cellSize;
         canvas.startNode = startNode;
